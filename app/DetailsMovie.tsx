@@ -20,30 +20,36 @@ const DetailsMovie: React.FC<any> = ({route}) => {
   };
 
   return (
-    <ScrollView>
+    <ScrollView style={styles.item}>
       {movieDetails && (
-        <View style={styles.item}>
-          <View style={styles.imageContainer}>
-            <Image
-              style={styles.image}
-              source={{
-                uri: `${BASE_URL_IMAGE}original${movieDetails.backdrop_path}`,
-              }}
-              resizeMode="cover"
-            />
-            <View style={styles.textOverlay}>
-              <Text style={styles.releaseDate}>
-                {new Date(movieDetails.release_date).toLocaleDateString()}
+        <View>
+          <Image
+            style={styles.image}
+            source={{
+              uri: `${BASE_URL_IMAGE}original${movieDetails.backdrop_path}`,
+            }}
+            resizeMode="cover"
+          />
+
+          <View style={styles.constinerTop}>
+            <View style={styles.containerTitle}>
+              <Text style={styles.title}>{movieDetails.title}</Text>
+
+              <Text style={styles.date}>
+                {new Date(movieDetails.release_date).getFullYear()}
               </Text>
+            </View>
+            <View style={styles.containerGenre}>
+              <Text style={styles.runtime}>{movieDetails.runtime}m | </Text>
+              {movieDetails.genres.map(genre => (
+                <Text key={genre.id} style={styles.genre}>{genre.name}</Text>
+              ))}
             </View>
           </View>
 
-          <Text style={styles.title}>{movieDetails.title}</Text>
-          {movieDetails.genres.map(genre => (
-            <Text style={styles.title}>{genre.name}</Text>
-          ))}
-
-          <Text style={styles.title}>{movieDetails.overview}</Text>
+          <View style={styles.containerOverview}>
+            <Text style={styles.overview}>{movieDetails.overview}</Text>
+          </View>
         </View>
       )}
     </ScrollView>
@@ -53,29 +59,52 @@ const DetailsMovie: React.FC<any> = ({route}) => {
 const styles = StyleSheet.create({
   item: {
     flex: 1,
-  },
-  imageContainer: {
-    position: 'relative',
-  },
-  textOverlay: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    padding: 5,
-  },
-  releaseDate: {
-    color: 'white',
-    fontSize: 16,
+    backgroundColor: 'darkgrey',
   },
   image: {
     width: '100%',
     height: 250,
   },
+  constinerTop: {
+    backgroundColor: 'grey',
+  },
+  containerTitle: {
+    paddingTop: 10,
+    paddingHorizontal: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  containerGenre: {
+    paddingTop: 5,
+    paddingHorizontal: 10,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+  },
+  containerOverview: {
+    padding: 10,
+  },
   title: {
+    flex: 1,
+    fontSize: 36,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  date: {
+    fontSize: 18,
+    color: 'white',
+  },
+  runtime: {
+    fontSize: 16,
+  },
+  genre: {
+    fontSize: 16,
+    marginRight: 10,
+  },
+  overview: {
+    paddingTop: 5,
     fontSize: 22,
-    marginTop: 5,
+    textAlign: 'justify',
   },
 });
 
