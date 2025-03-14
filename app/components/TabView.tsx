@@ -1,62 +1,34 @@
-import * as React from 'react';
+import {useEffect, useState} from 'react';
 import {useWindowDimensions} from 'react-native';
 import {TabView, TabBar} from 'react-native-tab-view';
 import ListMovies from '../ListMovies';
-
-const DATA = [
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'First Item',
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'Second Item',
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Third Item',
-  },
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28bf',
-    title: 'First Item',
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f6g',
-    title: 'Second Item',
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d7k',
-    title: 'Third Item',
-  },
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28bs',
-    title: 'First Item',
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f6r',
-    title: 'Second Item',
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d7c',
-    title: 'Third Item',
-  },
-];
+import {
+  getMoviesPopular,
+  getMoviesUpcoming,
+} from '../services/listMovieService';
+import {Movie} from '../model/interfaces';
 
 export default function TabViewExample() {
   const layout = useWindowDimensions();
 
-  const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState([
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
     {key: 'first', title: 'Upcoming'},
     {key: 'second', title: 'Popular'},
   ]);
+  const [popular, setPopular] = useState<Movie[]>([]);
+  const [upcoming, setUpcoming] = useState<Movie[]>([]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const renderScene = ({route}) => {
     switch (route.key) {
       case 'first':
-        return <ListMovies movies={DATA} />;
+        return <ListMovies movies={upcoming} />;
       case 'second':
-        return <ListMovies movies={DATA} />;
+        return <ListMovies movies={popular} />;
       default:
         return null;
     }
@@ -71,6 +43,13 @@ export default function TabViewExample() {
       style={{backgroundColor: '#283747'}}
     />
   );
+
+  const fetchData = async () => {
+    const responsePopular = await getMoviesPopular();
+    const responseUpcoming = await getMoviesUpcoming();
+    setPopular(responsePopular.results);
+    setUpcoming(responseUpcoming.results);
+  };
 
   return (
     <TabView

@@ -1,4 +1,3 @@
-import {Text, View} from 'react-native';
 import TabViewExample from './components/TabView';
 
 const HomeScreen = () => {
